@@ -1,0 +1,357 @@
+/* ==========================================================================
+   Caldo & Cozinha — estilos do APLICATIVO
+   Complementa assets/guide.css (tokens + componentes de produto).
+   Regra: nenhum hex solto aqui. Se faltar um valor, ele nasce como token
+   em guide.css primeiro.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- RESET -- */
+[hidden] { display: none !important; }
+
+.app-main {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6) var(--space-16);
+}
+
+/* ---------------------------------------------------------------- HERO -- */
+.hero {
+  max-width: var(--container-narrow);
+  margin-bottom: var(--space-8);
+}
+.hero-eyebrow {
+  display: block;
+  font-size: var(--fs-overline);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wideest);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-display-md);
+  font-weight: 600;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+}
+.hero-lede {
+  margin-top: var(--space-3);
+  font-size: var(--fs-lg);
+  line-height: var(--lh-relaxed);
+  color: var(--text-muted);
+  max-width: 60ch;
+}
+.hero-lede strong { color: var(--text); }
+
+/* -------------------------------------------------------------- HEADER -- */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  color: var(--text);
+}
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
+  background: var(--primary-subtle);
+  color: var(--text-primary);
+  border: 1px solid var(--primary-border);
+}
+.brand-mark svg { width: 20px; height: 20px; }
+.brand-name {
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: var(--ls-snug);
+}
+.brand-name small {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--text-subtle);
+  letter-spacing: var(--ls-normal);
+}
+
+.app-header-spacer { flex: 1; }
+
+.nav-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  margin-left: 4px;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: 11px;
+  font-weight: 700;
+  vertical-align: 1px;
+}
+
+.quota-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  background: var(--surface-sunken);
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.quota-pill svg { width: 14px; height: 14px; color: var(--accent-hover); }
+.quota-pill.is-exhausted { color: var(--danger); border-color: var(--danger-border); background: var(--danger-subtle); }
+
+/* ------------------------------------------------------------ FORMULARIO -- */
+#gen-form { display: flex; flex-direction: column; gap: var(--space-5); }
+
+.gen-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.gen-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+/* ------------------------------------------------------------ RESULTADO -- */
+.skeleton-wrap-body { padding: var(--space-6); }
+
+.result-hero {
+  position: relative;
+  aspect-ratio: 21 / 9;
+  display: grid;
+  place-items: center;
+  font-size: 4rem;
+  background: linear-gradient(135deg, var(--terracotta-200), var(--terracotta-400));
+}
+.result-hero--2 { background: linear-gradient(135deg, var(--olive-200), var(--olive-400)); }
+.result-hero--3 { background: linear-gradient(135deg, var(--mustard-200), var(--mustard-400)); }
+.result-hero--4 { background: linear-gradient(135deg, var(--warm-200), var(--warm-400)); }
+
+.result-head {
+  padding: var(--space-6);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.result-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h1);
+  font-weight: 600;
+  line-height: var(--lh-snug);
+  letter-spacing: var(--ls-tight);
+}
+.result-desc {
+  font-size: var(--fs-md);
+  line-height: var(--lh-relaxed);
+  color: var(--text-muted);
+  max-width: 68ch;
+}
+.result-badges { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+.result-body { padding: var(--space-6); }
+
+.result-section + .result-section { margin-top: var(--space-8); }
+.result-section-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: var(--ls-snug);
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.result-section-title svg { width: 18px; height: 18px; color: var(--text-primary); }
+
+.result-grid-2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.nutrition-note {
+  display: block;
+  margin-top: var(--space-3);
+  font-size: var(--fs-xs);
+  color: var(--text-subtle);
+}
+
+.servings-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-2);
+}
+.servings-control .field-label { margin: 0; }
+.servings-hint {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--text-subtle);
+  margin-left: 6px;
+}
+
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--border-subtle);
+  background: var(--surface-sunken);
+}
+
+.result-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  font-size: var(--fs-xs);
+  color: var(--text-subtle);
+}
+.result-meta span { display: inline-flex; align-items: center; gap: 5px; }
+.result-meta svg { width: 13px; height: 13px; }
+
+/* Tempo estimado de cada passo do modo de preparo */
+.step-time {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text-subtle);
+  white-space: nowrap;
+}
+
+/* Lista de dicas da cozinha */
+.tip-list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-3); }
+.tip-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: var(--text-muted);
+}
+.tip-list svg { width: 16px; height: 16px; flex: none; margin-top: 2px; color: var(--secondary); }
+.tip-list span { flex: 1; }
+
+/* ----------------------------------------------------------- FAVORITOS -- */
+.page-head { margin-bottom: var(--space-6); }
+.page-head h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h1);
+  font-weight: 600;
+  letter-spacing: var(--ls-tight);
+}
+.page-head p { color: var(--text-muted); font-size: var(--fs-sm); margin-top: var(--space-2); }
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-5);
+}
+.recipe-grid .recipe-card { cursor: pointer; }
+.recipe-grid .recipe-thumb { font-size: 2.5rem; }
+.recipe-grid .recipe-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------- TOAST -- */
+.toast-wrap {
+  position: fixed;
+  bottom: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  z-index: 200;
+  pointer-events: none;
+}
+.toast-wrap .toast { box-shadow: var(--shadow-lg); animation: toast-in var(--dur-3) var(--ease-out); }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.toast--error { background: var(--danger); color: #fff; }
+.toast--error svg { color: #fff; }
+
+/* -------------------------------------------------------------- FOOTER -- */
+.app-footer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.app-footer p {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--space-6);
+  font-size: var(--fs-xs);
+  color: var(--text-subtle);
+}
+.app-footer a { color: var(--text-muted); }
+
+/* ----------------------------------------------------------- RESPONSIVO -- */
+@media (max-width: 1080px) {
+  .result-grid-2 { grid-template-columns: 1fr; gap: var(--space-6); }
+}
+@media (max-width: 900px) {
+  .app-header-inner { flex-wrap: wrap; gap: var(--space-3); }
+  .app-header-spacer { display: none; }
+  .app-nav { order: 3; width: 100%; overflow-x: auto; }
+  .hero h1 { font-size: var(--fs-display-lg); }
+  .app-main { padding: var(--space-6) var(--space-5) var(--space-12); }
+}
+@media (max-width: 560px) {
+  .gen-form-row { grid-template-columns: 1fr; }
+  .brand-name { display: none; }
+  .quota-pill { display: none; }
+}
+
+/* ------------------------------------------------------------- IMPRESSÃO -- */
+@media print {
+  .app-header,
+  .app-footer,
+  .gen-panel,
+  .result-actions,
+  .toast-wrap,
+  .recipe-fav { display: none !important; }
+
+  .app-main { padding: 0; max-width: none; }
+  .gen-layout { grid-template-columns: 1fr; }
+  .gen-result { border: 0; }
+  .result-hero { display: none; }
+  .result-body { padding: 0; }
+  .result-section { break-inside: avoid; }
+  .method li { break-inside: avoid; }
+}

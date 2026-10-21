@@ -1,0 +1,9 @@
+# Arquivos que NÃO devem virar estático público.
+# (o Worker, a configuração e a documentação não precisam ficar expostos)
+worker/
+wrangler.toml
+README.md
+*.md
+node_modules/
+.git/
+.gitignore

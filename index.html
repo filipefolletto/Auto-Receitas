@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caldo &amp; Cozinha — Gerador de Receitas</title>
+<meta name="description" content="Descreva o que você quer cozinhar e receba a receita completa: ingredientes, modo de preparo, dicas e estimativas de calorias.">
+<meta name="theme-color" content="#C0562A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/guide.css">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+
+<!-- ============ SPRITE DE ÍCONES ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="ico" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"></g>
+  </defs>
+  <symbol id="i-chef" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54A5 5 0 0 1 17 5a4 4 0 0 1 1 7.75V19a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2Z"/><path d="M6 17h12"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s4 4 4 8a4 4 0 0 1-8 0c0-1 .5-2 1-2.5"/><path d="M8.5 12A4.5 4.5 0 0 0 7 16.5 5 5 0 0 0 12 21a5 5 0 0 0 5-4.5c0-4-5-8.5-5-8.5"/><path d="M12 21a2.5 2.5 0 0 0 2.5-2.5c0-1.5-1.5-2.5-2.5-4-.5 1-2 1.5-2 4A2.5 2.5 0 0 0 12 21Z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13A4 4 0 0 1 16 11"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 6 6L20 6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6 18 18M18 6 6 18"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8 6.2 20.9l1.1-6.5-4.7-4.6 6.5-.9Z"/></symbol>
+  <symbol id="i-star-fill" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="m12 3 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8 6.2 20.9l1.1-6.5-4.7-4.6 6.5-.9Z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5.6a5 5 0 0 0-7 0l-.5.5-.5-.5a5 5 0 1 0-7 7l8 8 8-8a5 5 0 0 0 0-7Z"/></symbol>
+  <symbol id="i-heart-fill" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M19 5.6a5 5 0 0 0-7 0l-.5.5-.5-.5a5 5 0 1 0-7 7l8 8 8-8a5 5 0 0 0 0-7Z"/></symbol>
+  <symbol id="i-bookmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18l-6-4-6 4Z"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.6 6.8-4M8.6 13.4l6.8 4"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18l-7 8v6l-4 2v-8Z"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20s0-9 8-13c4-2 8-2 8-2s1 6-2 10-9 6-14 5Z"/><path d="M4 20 14 10"/></symbol>
+  <symbol id="i-utensils" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7a3 3 0 0 0 6 0V2M6 2v20M15 2v8a3 3 0 0 0 3 3h1M19 2v20"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6v16M12 6a3 3 0 0 0-3-3H4a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5a3 3 0 0 1 3 3M12 6a3 3 0 0 1 3-3h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5a3 3 0 0 0-3 3"/></symbol>
+  <symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9Z"/><path d="M18 15.5 19 18l2.5 1-2.5 1-1 2.5-1-2.5L14.5 19l2.5-1Z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M14 6l6 6-6 6"/></symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4M10 6l-6 6 6 6"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+  <symbol id="i-basket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18l-1.6 10.1A2 2 0 0 1 17.4 21H6.6a2 2 0 0 1-2-1.9Z"/><path d="m8 9 3-6M16 9l-3-6M12 9v12"/></symbol>
+  <symbol id="i-timer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2h4M12 14l3-3"/><circle cx="12" cy="14" r="8"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h.01M12 12h.01M19 12h.01"/></symbol>
+  <symbol id="i-print" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-shuffle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></symbol>
+</svg>
+
+<!-- ============ HEADER ============ -->
+<header class="app-header">
+  <div class="app-header-inner">
+    <a class="brand" href="index.html" aria-label="Caldo e Cozinha — página inicial">
+      <span class="brand-mark"><svg><use href="#i-chef"/></svg></span>
+      <span class="brand-name">Caldo &amp; Cozinha<small>Gerador de receitas</small></span>
+    </a>
+
+    <nav class="app-nav" aria-label="Principal">
+      <a href="#gerador" data-view="generator" class="is-active">Gerador</a>
+      <a href="#favoritos" data-view="favorites">Favoritos <span class="nav-count" id="fav-count" hidden>0</span></a>
+      <a href="guide.html">Guia de estilo</a>
+    </nav>
+
+    <div class="app-header-spacer"></div>
+
+    <span class="quota-pill" id="quota-pill" title="Receitas geradas hoje">
+      <svg><use href="#i-flame"/></svg><span id="quota-text">—</span>
+    </span>
+
+    <button class="btn btn--secondary btn--icon" id="theme-toggle" aria-label="Alternar tema claro/escuro" title="Alternar tema">
+      <svg class="only-light"><use href="#i-moon"/></svg>
+      <svg class="only-dark"><use href="#i-sun"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ============ APP ============ -->
+<main class="app-main">
+
+  <!-- ===== VISAO: GERADOR ===== -->
+  <section class="view" id="view-generator">
+
+    <div class="hero">
+      <span class="hero-eyebrow">Cozinha de verdade, sem complicação</span>
+      <h1>O que vamos cozinhar hoje?</h1>
+      <p class="hero-lede">
+        Descreva o prato, o tempo e a dieta. O gerador monta a receita inteira —
+        <strong>ingredientes com medida exata</strong>, modo de preparo em passos e dicas que evitam erro.
+      </p>
+    </div>
+
+    <div class="gen-layout">
+
+      <!-- --- FORMULARIO --- -->
+      <aside class="gen-panel">
+        <h3>Monte o pedido</h3>
+
+        <form id="gen-form" novalidate>
+          <div class="field">
+            <label class="field-label" for="dish">O que você quer cozinhar? <span class="req" aria-hidden="true">*</span></label>
+            <input class="input" id="dish" name="dish" type="text" maxlength="120" autocomplete="off"
+                   placeholder="Ex.: frango com cream de abóbora" aria-describedby="dish-hint">
+            <span class="field-hint" id="dish-hint">Quanto mais específico, melhor a receita.</span>
+            <span class="field-error" id="dish-error" hidden><svg><use href="#i-alert"/></svg> Diga o que você quer cozinhar.</span>
+          </div>
+
+          <div class="field">
+            <span class="field-label" id="diet-label">Restrições e preferências</span>
+            <div class="chip-row" role="group" aria-labelledby="diet-label">
+              <button type="button" class="chip" data-chip="vegetariano" aria-pressed="false"><svg><use href="#i-leaf"/></svg> Vegetariano</button>
+              <button type="button" class="chip" data-chip="vegano" aria-pressed="false"><svg><use href="#i-leaf"/></svg> Vegano</button>
+              <button type="button" class="chip" data-chip="sem lactose" aria-pressed="false">Sem lactose</button>
+              <button type="button" class="chip" data-chip="sem gluten" aria-pressed="false">Sem glúten</button>
+              <button type="button" class="chip" data-chip="low carb" aria-pressed="false">Low carb</button>
+              <button type="button" class="chip" data-chip="rapida" aria-pressed="false"><svg><use href="#i-clock"/></svg> Rápida</button>
+            </div>
+          </div>
+
+          <div class="gen-form-row">
+            <div class="field">
+              <label class="field-label" for="difficulty">Dificuldade</label>
+              <select class="select" id="difficulty" name="difficulty">
+                <option value="Qualquer uma">Qualquer uma</option>
+                <option value="Fácil">Fácil</option>
+                <option value="Média">Média</option>
+                <option value="Desafio">Desafio</option>
+              </select>
+            </div>
+            <div class="field">
+              <span class="field-label" id="servings-label">Porções</span>
+              <div class="stepper" role="group" aria-labelledby="servings-label">
+                <button type="button" data-step="-1" aria-label="Diminuir porções"><svg><use href="#i-minus"/></svg></button>
+                <output id="servings" aria-live="polite">4</output>
+                <button type="button" data-step="1" aria-label="Aumentar porções"><svg><use href="#i-plus"/></svg></button>
+              </div>
+              <span class="field-hint">De 2 a 12 porções.</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="max-time">Tempo máximo de preparo: <strong id="max-time-value">45 min</strong></label>
+            <input class="range" id="max-time" type="range" min="15" max="120" step="15" value="45">
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="equipment">Equipamento</label>
+            <select class="select" id="equipment" name="equipment">
+              <option value="Qualquer um">Qualquer um</option>
+              <option value="Fogão">Fogão</option>
+              <option value="Forno">Forno</option>
+              <option value="Airfryer">Airfryer</option>
+              <option value="Micro-ondas">Micro-ondas</option>
+              <option value="Sem cozinhar">Sem cozinhar</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="notes">Observações (opcional)</label>
+            <textarea class="textarea" id="notes" name="notes" maxlength="280"
+                      placeholder="Sem lactose, sem glúten, low carb…"></textarea>
+            <span class="field-hint"><span id="notes-count">0</span>/280 caracteres.</span>
+          </div>
+
+          <div class="gen-actions">
+            <button class="btn btn--primary btn--lg btn--block" type="submit" id="generate-btn">
+              <svg><use href="#i-sparkles"/></svg> Gerar receita
+            </button>
+            <button class="btn btn--accent btn--block" type="button" id="surprise-btn">
+              <svg><use href="#i-shuffle"/></svg> Surpreenda-me
+            </button>
+          </div>
+        </form>
+      </aside>
+
+      <!-- --- RESULTADO --- -->
+      <div class="gen-result" id="result" aria-live="polite" aria-busy="false">
+
+        <div class="empty" id="result-empty">
+          <div class="empty-icon"><svg><use href="#i-chef"/></svg></div>
+          <h4>Sua receita aparece aqui</h4>
+          <p>Preencha o formulário ao lado e o gerador devolve o prato completo: ingredientes medidos, modo de preparo e as dicas que fazem a diferença.</p>
+        </div>
+
+        <div class="skeleton-wrap" id="result-skeleton" hidden>
+          <div class="skeleton skeleton--media"></div>
+          <div class="skeleton-wrap-body">
+            <div class="skeleton skeleton--title"></div>
+            <div class="skeleton skeleton--text"></div>
+            <div class="skeleton skeleton--text"></div>
+            <div class="skeleton skeleton--text" style="width:45%"></div>
+          </div>
+        </div>
+
+        <div id="result-content" hidden></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== VISAO: FAVORITOS ===== -->
+  <section class="view" id="view-favorites" hidden>
+    <div class="page-head">
+      <h2>Favoritos</h2>
+      <p>As receitas salvas ficam guardadas neste navegador — nada sai do seu computador.</p>
+    </div>
+    <div class="recipe-grid" id="favorites-grid"></div>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  <p>
+    Feito com <a href="guide.html">Caldo &amp; Cozinha</a> · Gerado por IA — confira temperaturas, tempos e entre Fermentos.
+  </p>
+</footer>
+
+<!-- ============ TOAST ============ -->
+<div class="toast-wrap" id="toast-wrap" role="status" aria-live="polite"></div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+# ============================================================================
+#  Caldo & Cozinha — configuração do Cloudflare Worker (plano Free)
+#
+#  Deploy:
+#    1. wrangler d1 create caldo            -> cole o database_id aqui
+#    2. wrangler d1 execute caldo --remote --file=./worker/schema.sql
+#    3. wrangler secret put GEMINI_API_KEY
+#    4. wrangler deploy
+#
+#  Tudo no plano gratuito: sem cartão de crédito.
+# ============================================================================
+
+name = "caldo-e-cozinha"
+main = "worker/index.js"
+compatibility_date = "2026-10-21"
+
+# Segredos (nunca vão para o git nem para o navegador):
+#   wrangler secret put GEMINI_API_KEY        <- Gemini (camada gratuita)
+#   wrangler secret put GROQ_API_KEY          <- reserva (opcional)
+#   wrangler secret put OPENROUTER_API_KEY    <- reserva (opcional)
+#
+# Variáveis (opcionais):
+#   MAX_RECIPES_PER_DAY  -> cota de gerações por IP por dia (padrão: 20)
+#   PUBLIC_URL           -> usado no cabeçalho do OpenRouter
+#   GEMINI_MODEL         -> padrão: gemini-3.8-flash
+#   GROQ_MODEL           -> padrão: openai/gpt-oss-120b
+
+[vars]
+MAX_RECIPES_PER_DAY = "20"
+
+# ---------------------------------------------------------------------------
+#  Estáticos: o próprio app (index.html, assets/) + o style guide (guide.html)
+# ---------------------------------------------------------------------------
+[assets]
+directory = "./"
+binding = "ASSETS"
+# o Worker só roda primeiro nas rotas de API; o resto é servido direto do disco
+run_worker_first = ["/api/*"]
+
+# ---------------------------------------------------------------------------
+#  D1 — cache de receitas + cota diária
+# ---------------------------------------------------------------------------
+[[d1_databases]]
+binding = "DB"
+database_name = "caldo"
+database_id = "COLE_AQUI_O_DATABASE_ID"
