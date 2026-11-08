@@ -185,7 +185,7 @@ async function health(env, request) {
 
   return {
     ok: true,
-    service: 'caldo-e-cozinha',
+    service: 'sabore',
     model: env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL,
     // só diz QUEM está configurado, nunca a chave
     providers: providerIds(env),

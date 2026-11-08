@@ -94,24 +94,19 @@ responde erro.
 
 ### Com a API (precisa de Node.js)
 
-O `wrangler` roda em Node. Instale o Node LTS (gratuito) e:
+O `wrangler` roda em Node. Instale o Node LTS (gratuito) e use via
+`npx wrangler` (ou `npm install -g wrangler`):
 
 ```bash
-npm install -g wrangler
 wrangler login
 
-# 1. cria o banco D1 (anote o database_id)
-wrangler d1 create caldo
+# 1. schema no D1 local (cache e cota no dev)
+wrangler d1 execute Auto-receitas --local --file=./worker/schema.sql
 
-# 2. cole o database_id no wrangler.toml
+# 2. chave local: crie .dev.vars (fora do git) com
+#    GEMINI_API_KEY=sua-chave
 
-# 3. cria as tabelas
-wrangler d1 execute caldo --remote --file=./worker/schema.sql
-
-# 4. guarda a chave da IA fora do código
-wrangler secret put GEMINI_API_KEY
-
-# 5. sobe o servidor local
+# 3. sobe o servidor local
 wrangler dev
 ```
 
@@ -133,18 +128,20 @@ O Worker serve o site estático e a API na mesma URL. O caminho recomendado é o
 winget install OpenJS.NodeJS.LTS
 ```
 
+> Se o PowerShell bloquear `npx`/`wrangler` por execution policy, use
+> `npx.cmd`/`wrangler.cmd` no lugar.
+
 ### 1. Banco D1
 
-```bash
-wrangler d1 create caldo
-```
-
-Copie o `database_id` que o comando imprime para `wrangler.toml` (no lugar de
-`COLE_AQUI_O_DATABASE_ID`) e crie as tabelas:
+O projeto usa o banco **Auto-receitas**, já criado e ligado em `wrangler.toml`.
+Aplique o schema:
 
 ```bash
-wrangler d1 execute caldo --remote --file=./worker/schema.sql
+wrangler d1 execute Auto-receitas --remote --file=./worker/schema.sql
 ```
+
+Para recriar do zero: `wrangler d1 create Auto-receitas`, copie o novo
+`database_id` para `wrangler.toml` e rode o comando acima.
 
 ### 2. Segredos
 
@@ -159,7 +156,7 @@ wrangler secret put OPENROUTER_API_KEY   # opcional (reserva)
 Depois do primeiro deploy, adicione a URL em `[vars]` do `wrangler.toml`:
 
 ```toml
-PUBLIC_URL = "https://SEU-WORKER.workers.dev"
+PUBLIC_URL = "https://sabore.SEU-SUBDOMINIO.workers.dev"
 ```
 
 Serve para o `HTTP-Referer`/`X-Title` do OpenRouter.

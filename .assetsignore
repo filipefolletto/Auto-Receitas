@@ -5,5 +5,8 @@ wrangler.toml
 README.md
 *.md
 node_modules/
+.wrangler/
+.dev.vars
+.env
 .git/
 .gitignore
