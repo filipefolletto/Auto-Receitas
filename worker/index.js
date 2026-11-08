@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- *  Caldo & Cozinha — API do Gerador de Receitas
+ *  Saborê — API do Gerador de Receitas
  *  Cloudflare Worker (plano Free) + D1 (cache de receitas + cota diária)
  *
  *  O que este Worker faz:
@@ -143,7 +143,7 @@ export default {
       return handleApi(request, env, url);
     }
 
-    // Estáticos (index.html, guide.html, assets/…) — servidos pelo próprio
+    // Estáticos (index.html, assets/…) — servidos pelo próprio
     // Workers Assets. O Worker só é acionado quando não há arquivo.
     if (env.ASSETS) {
       return env.ASSETS.fetch(request);
@@ -410,7 +410,7 @@ async function callOpenRouter(env, prompt) {
 
   const headers = {};
   if (env.PUBLIC_URL) headers['HTTP-Referer'] = env.PUBLIC_URL;
-  if (env.PUBLIC_URL) headers['X-Title'] = 'Caldo & Cozinha';
+  if (env.PUBLIC_URL) headers['X-Title'] = 'Saborê';
 
   return callOpenAICompatible({
     url: OPENROUTER_URL,

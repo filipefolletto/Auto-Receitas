@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Caldo & Cozinha — Gerador de Receitas
+   Saborê — Gerador de Receitas
    Front-end sem framework e sem build.
    Conversa com o Worker (Cloudflare) em /api — a chave da IA nunca chega aqui.
    ========================================================================== */
@@ -16,7 +16,7 @@
     last: 'caldo.last'
   };
 
-  var SUGESTIONS = [
+  var SUGESTOES = [
     'strogonoff de frango com batata palha',
     'creme de abóbora com gengibre e alecrim',
     'carne de panela com legumes assados',
@@ -35,9 +35,7 @@
     recipe: null,
     meta: null,
     baseServings: 4,
-    servings: 4,
-    quota: null,
-    view: 'generator'
+    servings: 4
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -189,7 +187,6 @@
 
   /* ---------------------------------------------------------------- VIEWS -- */
   function showView(name) {
-    state.view = name;
     $('view-generator').hidden = name !== 'generator';
     $('view-favorites').hidden = name !== 'favorites';
     Array.prototype.forEach.call(document.querySelectorAll('.app-nav a[data-view]'), function (a) {
@@ -304,7 +301,7 @@
     });
 
     $('surprise-btn').addEventListener('click', function () {
-      dish.value = SUGGESTIONS[Math.floor(Math.random() * SUGGESTIONS.length)];
+      dish.value = SUGESTOES[Math.floor(Math.random() * SUGESTOES.length)];
       dish.classList.remove('is-invalid');
       $('dish-error').hidden = true;
       generate();
@@ -602,7 +599,6 @@
   /* ---------------------------------------------------------------- COTA -- */
   function updateQuota(quota) {
     if (!quota) return;
-    state.quota = quota;
     var pill = $('quota-pill');
     var text = $('quota-text');
     if (!pill || !text) return;

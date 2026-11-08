@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Caldo & Cozinha — estilos do APLICATIVO
+   Saborê — estilos do APLICATIVO
    Complementa assets/guide.css (tokens + componentes de produto).
    Regra: nenhum hex solto aqui. Se faltar um valor, ele nasce como token
    em guide.css primeiro.
@@ -24,14 +24,14 @@
   font-size: var(--fs-overline);
   text-transform: uppercase;
   letter-spacing: var(--ls-wideest);
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   color: var(--text-primary);
   margin-bottom: var(--space-2);
 }
 .hero h1 {
   font-family: var(--font-display);
   font-size: var(--fs-display-md);
-  font-weight: 600;
+  font-weight: var(--fw-bold);
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
 }
@@ -63,11 +63,11 @@
   color: var(--text-primary);
   border: 1px solid var(--primary-border);
 }
-.brand-mark svg { width: 20px; height: 20px; }
+.brand-mark svg { width: 28px; height: 28px; }
 .brand-name {
   font-family: var(--font-display);
   font-size: var(--fs-h4);
-  font-weight: 600;
+  font-weight: var(--fw-medium);
   line-height: 1.1;
   letter-spacing: var(--ls-snug);
 }
@@ -75,7 +75,7 @@
   display: block;
   font-family: var(--font-body);
   font-size: var(--fs-xs);
-  font-weight: 500;
+  font-weight: var(--fw-regular);
   color: var(--text-subtle);
   letter-spacing: var(--ls-normal);
 }
@@ -93,7 +93,7 @@
   background: var(--primary);
   color: var(--on-primary);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   vertical-align: 1px;
 }
 
@@ -108,11 +108,11 @@
   background: var(--surface-sunken);
   color: var(--text-muted);
   font-size: var(--fs-xs);
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-.quota-pill svg { width: 14px; height: 14px; color: var(--accent-hover); }
+.quota-pill svg { width: 14px; height: 14px; color: var(--accent-text); }
 .quota-pill.is-exhausted { color: var(--danger); border-color: var(--danger-border); background: var(--danger-subtle); }
 
 /* ------------------------------------------------------------ FORMULARIO -- */
@@ -146,11 +146,11 @@
   display: grid;
   place-items: center;
   font-size: 4rem;
-  background: linear-gradient(135deg, var(--terracotta-200), var(--terracotta-400));
+  background: linear-gradient(135deg, var(--green-200), var(--green-400));
 }
-.result-hero--2 { background: linear-gradient(135deg, var(--olive-200), var(--olive-400)); }
-.result-hero--3 { background: linear-gradient(135deg, var(--mustard-200), var(--mustard-400)); }
-.result-hero--4 { background: linear-gradient(135deg, var(--warm-200), var(--warm-400)); }
+.result-hero--2 { background: linear-gradient(135deg, var(--coral-200), var(--coral-500)); }
+.result-hero--3 { background: linear-gradient(135deg, var(--gold-200), var(--gold-400)); }
+.result-hero--4 { background: linear-gradient(135deg, var(--sand-200), var(--sand-400)); }
 
 .result-head {
   padding: var(--space-6);
@@ -162,7 +162,7 @@
 .result-title {
   font-family: var(--font-display);
   font-size: var(--fs-h1);
-  font-weight: 600;
+  font-weight: var(--fw-bold);
   line-height: var(--lh-snug);
   letter-spacing: var(--ls-tight);
 }
@@ -180,7 +180,7 @@
 .result-section-title {
   font-family: var(--font-display);
   font-size: var(--fs-h3);
-  font-weight: 600;
+  font-weight: var(--fw-medium);
   letter-spacing: var(--ls-snug);
   margin-bottom: var(--space-4);
   display: flex;
@@ -217,7 +217,7 @@
 .servings-hint {
   font-family: var(--font-body);
   font-size: var(--fs-xs);
-  font-weight: 500;
+  font-weight: var(--fw-regular);
   color: var(--text-subtle);
   margin-left: 6px;
 }
@@ -245,7 +245,7 @@
 .step-time {
   font-family: var(--font-body);
   font-size: var(--fs-xs);
-  font-weight: 600;
+  font-weight: var(--fw-medium);
   color: var(--text-subtle);
   white-space: nowrap;
 }
@@ -268,7 +268,7 @@
 .page-head h2 {
   font-family: var(--font-display);
   font-size: var(--fs-h1);
-  font-weight: 600;
+  font-weight: var(--fw-bold);
   letter-spacing: var(--ls-tight);
 }
 .page-head p { color: var(--text-muted); font-size: var(--fs-sm); margin-top: var(--space-2); }
@@ -304,8 +304,8 @@
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.toast--error { background: var(--danger); color: #fff; }
-.toast--error svg { color: #fff; }
+.toast--error { background: var(--danger); color: var(--on-danger); }
+.toast--error svg { color: var(--on-danger); }
 
 /* -------------------------------------------------------------- FOOTER -- */
 .app-footer {
@@ -344,8 +344,7 @@
   .app-footer,
   .gen-panel,
   .result-actions,
-  .toast-wrap,
-  .recipe-fav { display: none !important; }
+  .toast-wrap { display: none !important; }
 
   .app-main { padding: 0; max-width: none; }
   .gen-layout { grid-template-columns: 1fr; }

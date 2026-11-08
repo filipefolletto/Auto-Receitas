@@ -1,5 +1,5 @@
 -- ============================================================================
---  Caldo & Cozinha — D1 (Cloudflare, plano Free)
+--  Saborê — D1 (Cloudflare, plano Free)
 --
 --  Aplicar com:
 --    wrangler d1 execute caldo --remote --file=./worker/schema.sql

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 230">
+  <rect width="230" height="230" rx="52" fill="#F7F3E8"/>
+  <!-- Corpo do tomate -->
+  <path d="M115 62c-34 0-62 22-62 56 0 34 27 54 62 54s62-20 62-54c0-34-28-56-62-56z"
+        fill="#E85D3F" stroke="#1F2824" stroke-width="3" stroke-linejoin="round"/>
+  <!-- Folhas -->
+  <path d="M92 70l10 12 13-10 12 10 10-12-8-4h-30z"
+        fill="#28594C" stroke="#1F2824" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Chapeu de chef -->
+  <path d="M80 40c-4-10 6-18 16-14 6-8 22-8 28 0 10-4 22 4 26 14 2 6-2 12-8 14l-4 6H92l-4-6c-6-2-10-8-8-14z"
+        fill="#F7F3E8" stroke="#1F2824" stroke-width="3" stroke-linejoin="round"/>
+</svg>

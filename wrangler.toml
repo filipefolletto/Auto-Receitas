@@ -1,5 +1,5 @@
 # ============================================================================
-#  Caldo & Cozinha — configuração do Cloudflare Worker (plano Free)
+#  Saborê — configuração do Cloudflare Worker (plano Free)
 #
 #  Deploy:
 #    1. wrangler d1 create caldo            -> cole o database_id aqui
@@ -29,7 +29,7 @@ compatibility_date = "2026-10-21"
 MAX_RECIPES_PER_DAY = "20"
 
 # ---------------------------------------------------------------------------
-#  Estáticos: o próprio app (index.html, assets/) + o style guide (guide.html)
+#  Estáticos: o próprio app (index.html, assets/)
 # ---------------------------------------------------------------------------
 [assets]
 directory = "./"
