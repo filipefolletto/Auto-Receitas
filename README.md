@@ -18,6 +18,7 @@ assets/app.css          estilos só do app (complementa o guide.css)
 assets/app.js           lógica do app (form, chamada à API, favoritos, cota)
 assets/favicon.svg      ícone da marca (tomate de chef)
 assets/og.png           card de compartilhamento (1200×630)
+assets/loading-tomate.gif  animação de loading do card de resultado
 worker/index.js         a API: chave da IA, cache, cota e cascata de provedores
 worker/schema.sql       schema do D1 (cache + cota diária)
 wrangler.toml           configuração de deploy do Worker
