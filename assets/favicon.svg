@@ -1,12 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 230">
-  <rect width="230" height="230" rx="52" fill="#F7F3E8"/>
-  <!-- Corpo do tomate -->
-  <path d="M115 62c-34 0-62 22-62 56 0 34 27 54 62 54s62-20 62-54c0-34-28-56-62-56z"
-        fill="#E85D3F" stroke="#1F2824" stroke-width="3" stroke-linejoin="round"/>
-  <!-- Folhas -->
-  <path d="M92 70l10 12 13-10 12 10 10-12-8-4h-30z"
-        fill="#28594C" stroke="#1F2824" stroke-width="2.5" stroke-linejoin="round"/>
-  <!-- Chapeu de chef -->
-  <path d="M80 40c-4-10 6-18 16-14 6-8 22-8 28 0 10-4 22 4 26 14 2 6-2 12-8 14l-4 6H92l-4-6c-6-2-10-8-8-14z"
-        fill="#F7F3E8" stroke="#1F2824" stroke-width="3" stroke-linejoin="round"/>
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M119 83.7688C145 72.7688 173 91.7688 178 119.769C184 149.769 164 180.769 138 183.769C126 187.102 114.667 187.102 104 183.769C77 182.769 57 160.769 58 132.769C58 103.769 82 76.7688 105 81.7688C110.333 81.7688 115 82.4355 119 83.7688Z" fill="#E85D3F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="#1F2824"/>
+<path d="M75 111.769C78.3333 104.435 83.3333 99.4355 90 96.7688" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="#F7F3E8"/>
+<path d="M112.287 76.6667C101.641 75.1807 92.6035 77.7182 85.1754 84.2791L102.159 85.5226L96.0024 96.4355C105.363 94.5694 112.753 90.6749 118.172 84.7519C124.723 92.8465 132.008 96.2846 140.027 95.066L133.171 84.9667L149.14 87.1957C142.579 79.7677 134.628 76.3201 125.286 76.853L112.287 76.6667Z" fill="#28594C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="#1F2824"/>
+<path d="M95.4323 66.4242C79.4626 64.1953 80.7633 43.2117 95.7761 42.4267C100.452 41.827 104.099 43.2127 106.718 46.5839C110.903 33.6425 131.873 35.9431 135.7 47.9992C149.785 42.2004 160.597 55.3566 153.441 66.2552C151.393 69.5595 148.036 71.1783 143.37 71.1114L139.213 82.053C125.167 85.1854 111.511 84.3231 98.2457 79.4659L95.4323 66.4242Z" fill="#F7F3E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="#1F2824"/>
+<path d="M103.532 59.5396L105.403 68.5673M135.528 59.998L133.385 69.9683" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke="#1F2824"/>
+<path d="M97.3604 71.4524C111.978 74.9955 127.305 75.5484 143.341 73.1112L141.184 84.0814C127.138 87.2139 113.149 86.3467 99.217 81.48L97.3604 71.4524Z" fill="#F7F3E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="#1F2824"/>
 </svg>
