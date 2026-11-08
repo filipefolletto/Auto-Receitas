@@ -27,6 +27,7 @@ compatibility_date = "2026-10-21"
 
 [vars]
 MAX_RECIPES_PER_DAY = "20"
+PUBLIC_URL = "https://sabore.filipefolletto.workers.dev"
 
 # ---------------------------------------------------------------------------
 #  Estáticos: o próprio app (index.html, assets/)

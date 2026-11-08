@@ -153,13 +153,14 @@ wrangler secret put OPENROUTER_API_KEY   # opcional (reserva)
 
 ### 3. URL pública
 
-Depois do primeiro deploy, adicione a URL em `[vars]` do `wrangler.toml`:
+O `wrangler.toml` já aponta para a URL publicada:
 
 ```toml
-PUBLIC_URL = "https://sabore.SEU-SUBDOMINIO.workers.dev"
+PUBLIC_URL = "https://sabore.filipefolletto.workers.dev"
 ```
 
-Serve para o `HTTP-Referer`/`X-Title` do OpenRouter.
+Serve para o `HTTP-Referer`/`X-Title` do OpenRouter. O `og:image` também já
+usa essa URL absoluta.
 
 ### 4. Publicar
 
@@ -177,9 +178,6 @@ O `wrangler` publica `index.html`, `assets/` e o Worker juntos. Confira com
 
 > O D1 é obrigatório. Sem ele o site até abre, mas roda sem cache e **sem
 > cota** — ou seja, qualquer um pode queimar a cota gratuita da sua chave.
-
-> O `og:image` está com caminho relativo (`/assets/og.png`). Para o card
-> aparecer no WhatsApp/X, troque por URL absoluta depois do deploy.
 
 ---
 
