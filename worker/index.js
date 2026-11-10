@@ -25,9 +25,36 @@ const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
 const DEFAULT_GEMINI_MODEL = 'gemini-3.8-flash';
 const DEFAULT_GROQ_MODEL = 'openai/gpt-oss-120b';
-const DEFAULT_OPENROUTER_MODEL = 'meta-llama/llama-3.3-70b-instruct:free';
+
+// O Flash principal às vezes fica em 503 por alta demanda. Se isso acontecer,
+// tentamos versões Lite/anteriores antes de cair para Groq/OpenRouter.
+const GEMINI_MODELS = [DEFAULT_GEMINI_MODEL];
+
+// Modelos gratuitos do OpenRouter. A ordem é a de tentativa: se um estiver
+// rate-limited (429) ou indisponível (404), o próximo entra.
+const OPENROUTER_FREE_MODELS = [
+  'google/gemma-4-31b-it:free',
+  'google/gemma-4-26b-a4b-it:free',
+  'nvidia/nemotron-3.5-lightning:free',
+  'nvidia/nemotron-3-ultra-550b-a55b:free'
+];
+const DEFAULT_OPENROUTER_MODEL = OPENROUTER_FREE_MODELS[0];
+
+// Workers AI roda no próprio Cloudflare, sem chave. No plano Free são
+// 10.000 Neurons/dia — suficiente para a cota de 20 receitas/dia.
+const WORKERS_AI_MODELS = [
+  { id: '@cf/google/gemma-4-26b-a4b-it', schema: true, timeoutMs: 25000 },
+  { id: '@cf/qwen/qwen3-30b-a3b-fp8', schema: false, timeoutMs: 25000 },
+  { id: '@cf/meta/llama-3.3-70b-instruct-fp8-fast', schema: false, timeoutMs: 30000 },
+  { id: '@cf/meta/llama-3.1-8b-instruct-fp8', schema: false, timeoutMs: 20000 }
+];
 
 const CACHE_TTL_DAYS = 30;
+
+// Um provedor lento não pode segurar a resposta inteira. Se estourar o tempo,
+// o fetch é abortado e a cascata tenta o próximo provedor.
+const GEMINI_TIMEOUT_MS = 15000;
+const OPENAI_TIMEOUT_MS = 30000;
 
 /**
  * Schema da receita. É enviado como JSON Schema para o Gemini e como
@@ -294,6 +321,7 @@ async function generate(request, env) {
 const PROVIDERS = {
   gemini: callGemini,
   groq: callGroq,
+  'workers-ai': callWorkersAI,
   openrouter: callOpenRouter
 };
 
@@ -301,6 +329,7 @@ function providerIds(env) {
   const ids = [];
   if (env.GEMINI_API_KEY) ids.push('gemini');
   if (env.GROQ_API_KEY) ids.push('groq');
+  if (env.AI) ids.push('workers-ai');
   if (env.OPENROUTER_API_KEY) ids.push('openrouter');
   return ids;
 }
@@ -316,8 +345,11 @@ async function callGemini(env, prompt) {
   const key = env.GEMINI_API_KEY;
   if (!key) return null;
 
-  const model = env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL;
-  const url = `${GEMINI_BASE}/models/${model}:generateContent`;
+  const models = [];
+  if (env.GEMINI_MODEL) models.push(env.GEMINI_MODEL);
+  for (const model of GEMINI_MODELS) {
+    if (!models.includes(model)) models.push(model);
+  }
 
   const attempts = [
     {
@@ -336,54 +368,67 @@ async function callGemini(env, prompt) {
 
   let lastError = null;
 
-  for (const generationConfig of attempts) {
-    const body = {
-      systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: Object.assign({ maxOutputTokens: 8192 }, generationConfig)
-    };
+  for (const model of models) {
+    const url = `${GEMINI_BASE}/models/${model}:generateContent`;
 
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-goog-api-key': key
-      },
-      body: JSON.stringify(body)
-    });
+    for (const generationConfig of attempts) {
+      const body = {
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: Object.assign({ maxOutputTokens: 8192 }, generationConfig)
+      };
 
-    if (!res.ok) {
-      lastError = new ProviderError('gemini', res.status, await safeText(res));
-      // 400 costuma ser "campo não suportado" — tenta a próxima configuração.
-      if (res.status === 400) continue;
-      throw lastError;
+      let res;
+      try {
+        res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            'x-goog-api-key': key
+          },
+          body: JSON.stringify(body),
+          signal: AbortSignal.timeout(GEMINI_TIMEOUT_MS)
+        });
+      } catch (err) {
+        lastError = new ProviderError('gemini', 0, `${model}: ${err && err.message || 'tempo esgotado'}`);
+        break; // tempo esgotado — tenta o próximo modelo
+      }
+
+      if (!res.ok) {
+        lastError = new ProviderError('gemini', res.status, `${model}: ${await safeText(res)}`);
+        // 400 costuma ser "campo não suportado" — tenta a próxima configuração.
+        if (res.status === 400) continue;
+        // 404/429/503: modelo indisponível ou sobrecarregado — próximo modelo.
+        if (res.status === 404 || res.status === 429 || res.status === 503) break;
+        throw lastError;
+      }
+
+      const data = await res.json();
+      const candidate = data && data.candidates && data.candidates[0];
+
+      if (!candidate) {
+        const block = data && data.promptFeedback && data.promptFeedback.blockReason;
+        lastError = new ProviderError('gemini', 200, `${model}: ${block ? `bloqueado (${block})` : 'resposta vazia'}`);
+        continue;
+      }
+
+      if (candidate.finishReason === 'MAX_TOKENS') {
+        lastError = new ProviderError('gemini', 200, `${model}: resposta cortada por falta de tokens`);
+        continue;
+      }
+
+      const text = (candidate.content && candidate.content.parts || [])
+        .map(p => p.text || '')
+        .join('');
+
+      const parsed = parseJson(text);
+      if (!parsed) {
+        lastError = new ProviderError('gemini', 200, `${model}: o modelo não devolveu JSON válido`);
+        continue;
+      }
+
+      return { recipe: parsed, provider: 'gemini', model: model };
     }
-
-    const data = await res.json();
-    const candidate = data && data.candidates && data.candidates[0];
-
-    if (!candidate) {
-      const block = data && data.promptFeedback && data.promptFeedback.blockReason;
-      lastError = new ProviderError('gemini', 200, block ? `bloqueado (${block})` : 'resposta vazia');
-      continue;
-    }
-
-    if (candidate.finishReason === 'MAX_TOKENS') {
-      lastError = new ProviderError('gemini', 200, 'resposta cortada por falta de tokens');
-      continue;
-    }
-
-    const text = (candidate.content && candidate.content.parts || [])
-      .map(p => p.text || '')
-      .join('');
-
-    const parsed = parseJson(text);
-    if (!parsed) {
-      lastError = new ProviderError('gemini', 200, 'o modelo não devolveu JSON válido');
-      continue;
-    }
-
-    return { recipe: parsed, provider: 'gemini', model: model };
   }
 
   throw lastError || new ProviderError('gemini', 0, 'sem resposta');
@@ -403,6 +448,97 @@ async function callGroq(env, prompt) {
   });
 }
 
+/** Workers AI — binding nativo do Cloudflare, sem chave. */
+async function callWorkersAI(env, prompt) {
+  if (!env.AI) return null;
+
+  const messages = [
+    { role: 'system', content: SYSTEM_PROMPT },
+    {
+      role: 'user',
+      content: `${prompt}\n\nDevolva apenas JSON válido, seguindo este schema:\n${JSON.stringify(RECIPE_SCHEMA)}`
+    }
+  ];
+
+  const failures = [];
+  let lastError = null;
+
+  for (const model of WORKERS_AI_MODELS) {
+    const modelId = model.id;
+    try {
+      const input = {
+        messages: messages,
+        max_tokens: 4096,
+        temperature: 0.8
+      };
+
+      if (model.schema) {
+        input.response_format = {
+          type: 'json_schema',
+          json_schema: { name: 'recipe', schema: RECIPE_SCHEMA }
+        };
+      }
+      if (modelId.includes('gemma-4') || modelId.includes('qwen3')) {
+        input.chat_template_kwargs = { enable_thinking: false };
+      }
+
+      const result = await withTimeout(
+        env.AI.run(modelId, input),
+        model.timeoutMs || 20000,
+        'workers-ai'
+      );
+
+      if (result && result.error) {
+        throw new ProviderError('workers-ai', 0, `${modelId}: ${JSON.stringify(result.error)}`);
+      }
+
+      const value = result && (
+        result.response ||
+        (result.result && result.result.response) ||
+        (result.choices && result.choices[0] && result.choices[0].message && result.choices[0].message.content)
+      );
+      const raw = extractText(value);
+
+      const parsed = parseJson(raw);
+      if (!parsed) {
+        throw new ProviderError('workers-ai', 200, `${modelId}: o modelo não devolveu JSON válido`);
+      }
+
+      return { recipe: parsed, provider: 'workers-ai', model: modelId };
+    } catch (err) {
+      lastError = err;
+      const status = err instanceof ProviderError ? err.status : 0;
+      const detail = err instanceof ProviderError ? err.detail : String(err && err.message || err);
+      failures.push(`${modelId}: ${status} ${detail}`);
+    }
+  }
+
+  const status = lastError instanceof ProviderError ? lastError.status : 0;
+  throw new ProviderError('workers-ai', status, failures.join(' | ') || 'sem resposta');
+}
+
+function withTimeout(promise, ms, provider) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new ProviderError(provider, 0, 'tempo esgotado'));
+      }, ms);
+    })
+  ]);
+}
+
+function extractText(value) {
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value)) {
+    return value.map(part => {
+      if (typeof part === 'string') return part;
+      return part && part.text || '';
+    }).join('');
+  }
+  return '';
+}
+
 /** OpenRouter — API compatível com OpenAI, modelos `:free`. */
 async function callOpenRouter(env, prompt) {
   const key = env.OPENROUTER_API_KEY;
@@ -412,13 +548,40 @@ async function callOpenRouter(env, prompt) {
   if (env.PUBLIC_URL) headers['HTTP-Referer'] = env.PUBLIC_URL;
   if (env.PUBLIC_URL) headers['X-Title'] = 'Saborê';
 
-  return callOpenAICompatible({
-    url: OPENROUTER_URL,
-    key: key,
-    model: env.OPENROUTER_MODEL || DEFAULT_OPENROUTER_MODEL,
-    prompt: prompt,
-    extraHeaders: headers
-  });
+  const models = [];
+  if (env.OPENROUTER_MODEL) models.push(env.OPENROUTER_MODEL);
+  for (const model of OPENROUTER_FREE_MODELS) {
+    if (!models.includes(model)) models.push(model);
+  }
+
+  const failures = [];
+  let lastError = null;
+
+  for (const model of models) {
+    try {
+      return await callOpenAICompatible({
+        url: OPENROUTER_URL,
+        key: key,
+        model: model,
+        prompt: prompt,
+        extraHeaders: headers,
+        timeoutMs: 15000
+      });
+    } catch (err) {
+      lastError = err;
+      // Chave inválida: trocar de modelo não resolve.
+      if (err instanceof ProviderError && (err.status === 401 || err.status === 403)) {
+        throw err;
+      }
+      // 429/404/5xx/timeout: tenta o próximo modelo gratuito.
+      const status = err instanceof ProviderError ? err.status : 0;
+      const detail = err instanceof ProviderError ? err.detail : String(err && err.message || err);
+      failures.push(`${model}: ${status} ${detail}`);
+    }
+  }
+
+  const status = lastError instanceof ProviderError ? lastError.status : 0;
+  throw new ProviderError('openrouter', status, failures.join(' | ') || 'sem resposta');
 }
 
 /**
@@ -427,7 +590,8 @@ async function callOpenRouter(env, prompt) {
  * do texto — melhor que perder a receita inteira.
  */
 async function callOpenAICompatible(opts) {
-  const { url, key, model, prompt, extraHeaders } = opts;
+  const { url, key, model, prompt, extraHeaders, timeoutMs } = opts;
+  const requestTimeout = timeoutMs || OPENAI_TIMEOUT_MS;
 
   const base = {
     model: model,
@@ -454,7 +618,8 @@ async function callOpenAICompatible(opts) {
   let res = await fetch(url, {
     method: 'POST',
     headers: headers,
-    body: JSON.stringify(withSchema)
+    body: JSON.stringify(withSchema),
+    signal: AbortSignal.timeout(requestTimeout)
   });
 
   if (res.status === 400) {
@@ -462,7 +627,8 @@ async function callOpenAICompatible(opts) {
     res = await fetch(url, {
       method: 'POST',
       headers: headers,
-      body: JSON.stringify(base)
+      body: JSON.stringify(base),
+      signal: AbortSignal.timeout(requestTimeout)
     });
   }
 

@@ -5,7 +5,8 @@ prato e receba a receita inteira — ingredientes com medida, modo de preparo em
 passos, dicas de cozinha e estimativas nutricionais.
 
 **Custo: $0.** Plano gratuito do Cloudflare Workers (sem cartão de crédito) +
-camada gratuita do Gemini. Nenhum servidor para manter.
+camadas gratuitas de IA (Gemini, Groq, Workers AI e OpenRouter). Nenhum
+servidor para manter.
 
 ---
 
@@ -188,11 +189,16 @@ O `wrangler` publica `index.html`, `assets/` e o Worker juntos. Confira com
 | --- | --- | --- | --- |
 | `GEMINI_API_KEY` | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) | modelo principal (`gemini-3.8-flash`) | $0 no plano gratuito |
 | `GROQ_API_KEY` | [console.groq.com](https://console.groq.com/keys) | reserva #1 (`openai/gpt-oss-120b`) | $0 |
-| `OPENROUTER_API_KEY` | [openrouter.ai/keys](https://openrouter.ai/keys) | reserva #2 (modelos `:free`) | $0 |
+| `OPENROUTER_API_KEY` | [openrouter.ai/keys](https://openrouter.ai/keys) | reserva #2 (lista de modelos `:free`) | $0 |
 
 Só o primeiro é obrigatório. Os outros dois entram na cascata automaticamente
-se estiverem definidos — se o Gemini estiver fora do ar ou estourar a cota, o
+se estiverem definidos - se o Gemini estiver fora do ar ou estourar a cota, o
 Worker tenta o próximo sem você fazer nada.
+
+Além das chaves, o Worker usa o binding `AI` (Workers AI) como reserva
+gratuita: não precisa de chave e tem 10.000 Neurons/dia no plano Free. Ele
+entra antes do OpenRouter, porque os modelos `:free` do OpenRouter dividem um
+pool comunitário e costumam oscilar.
 
 A chave vive **só** nos segredos do Worker. O navegador nunca vê a chave.
 
@@ -246,12 +252,23 @@ Cache não conta. Quando acaba, a API responde `429` com uma mensagem clara.
 
 ### Cascata de provedores
 
-1. **Gemini** (`gemini-3.8-flash`) — JSON Schema via `responseJsonSchema`.
+1. **Gemini** (`gemini-3.8-flash`) - JSON Schema via `responseJsonSchema`.
    Se o endpoint recusar o campo, o Worker refaz com o subconjunto OpenAPI
-   (`responseSchema`) e, se ainda assim falhar, sem schema — extraindo o JSON
-   do texto. Três chances de dar certo.
-2. **Groq** (`openai/gpt-oss-120b`) — `response_format: json_schema`.
-3. **OpenRouter** (modelos `:free`) — `response_format: json_schema`.
+   (`responseSchema`) e, se ainda assim falhar, sem schema - extraindo o JSON
+   do texto. Três chances de dar certo. Se o modelo principal estiver em 503
+   por alta demanda, a cascata cai para o Groq/Workers AI.
+2. **Groq** (`openai/gpt-oss-120b`) - `response_format: json_schema`.
+3. **Workers AI** (`@cf/google/gemma-4-26b-a4b-it`) - binding `AI`, sem
+   chave, com `json_schema` nativo. Se falhar, tenta Qwen3 30B, Llama 3.3
+   70B e Llama 3.1 8B (FP8), nessa ordem.
+4. **OpenRouter** (lista de modelos `:free`) - `response_format: json_schema`.
+   Se um modelo estiver rate-limited (429) ou indisponível (404), tenta o
+   próximo da lista: Gemma 4 31B, Gemma 4 26B, Nemotron Lightning e Nemotron
+   Ultra.
+
+Cada provedor tem um limite de tempo: **15 s** por chamada no Gemini e no
+OpenRouter, **20 s** no Workers AI e **30 s** no Groq. Se estourar, o Worker
+aborta e cai para o próximo, em vez de segurar a resposta por minutos.
 
 ---
 

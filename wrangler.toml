@@ -24,10 +24,18 @@ compatibility_date = "2026-10-21"
 #   PUBLIC_URL           -> usado no cabeçalho do OpenRouter
 #   GEMINI_MODEL         -> padrão: gemini-3.8-flash
 #   GROQ_MODEL           -> padrão: openai/gpt-oss-120b
+#
+# Reserva sem chave: binding AI (Workers AI), 10.000 Neurons/dia no Free.
 
 [vars]
 MAX_RECIPES_PER_DAY = "20"
 PUBLIC_URL = "https://sabore.filipefolletto.workers.dev"
+
+# ---------------------------------------------------------------------------
+#  Workers AI — reserva gratuita, sem chave (10.000 Neurons/dia no Free)
+# ---------------------------------------------------------------------------
+[ai]
+binding = "AI"
 
 # ---------------------------------------------------------------------------
 #  Estáticos: o próprio app (index.html, assets/)
