@@ -380,21 +380,7 @@ wrangler.toml               configuração do Worker
 - **Workers AI Free** tem 10.000 Neurons/dia.
 - **Valores nutricionais** são estimativas geradas por IA, não dados clínicos.
 
----
 
-## Próximos passos
 
-- [ ] Streaming da resposta (SSE) para reduzir a percepção de espera.
-- [ ] Testes automatizados (unitários + integração) e CI.
-- [ ] Métricas por provedor: latência, taxa de fallback e custo estimado.
-- [ ] Rate limit distribuído / Turnstile contra abuso.
-- [ ] PWA com cache offline das receitas favoritas.
-- [ ] Histórico por usuário (login opcional) e compartilhamento.
 
----
 
-## Autor
-
-Feito por **Filipe Folletto** — [GitHub](https://github.com/filipefolletto).
-
-Se você é recrutador(a) e quer conversar sobre o projeto, me chama no GitHub.
