@@ -1,6 +1,6 @@
 # Saborê 🍅
 
-**Do que tem na dispensa para uma receita completa — com IA, na borda e a custo zero.**
+**Site de receitas feito com IA com custo zero.**
 
 [![Demo online](https://img.shields.io/badge/demo-online-2ea44f?style=for-the-badge)](https://sabore.filipefolletto.workers.dev)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
@@ -19,7 +19,7 @@ O **Saborê** transforma um pedido simples — “frango com creme de abóbora�
 “panqueca de banana” — em uma receita completa: ingredientes com medida, modo
 de preparo em passos, dicas de cozinha e estimativas nutricionais.
 
-O diferencial não é só a IA. É a **engenharia em volta dela**:
+**Engenharia:**:
 
 - **100% free tier** — Cloudflare Workers + D1 + provedores gratuitos de IA, sem cartão.
 - **Zero build** — HTML, CSS e JavaScript puros no front; sem npm, bundler ou framework.
@@ -43,7 +43,7 @@ O diferencial não é só a IA. É a **engenharia em volta dela**:
 | **Produto** | Fluxo completo: formulário, loading, resultado, favoritos, porções, cota e compartilhamento. |
 | **Design system** | Paleta, tipografia, contraste e componentes documentados; nenhum hex solto. |
 | **Custo como requisito** | Cada decisão foi tomada para caber no plano gratuito. |
-| **Resiliência** | Timeouts, fallback entre provedores e mensagens de erro úteis. |
+
 
 ---
 
