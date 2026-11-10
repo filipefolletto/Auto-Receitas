@@ -43,10 +43,9 @@ const DEFAULT_OPENROUTER_MODEL = OPENROUTER_FREE_MODELS[0];
 // Workers AI roda no próprio Cloudflare, sem chave. No plano Free são
 // 10.000 Neurons/dia — suficiente para a cota de 20 receitas/dia.
 const WORKERS_AI_MODELS = [
-  { id: '@cf/google/gemma-4-26b-a4b-it', schema: true, timeoutMs: 25000 },
-  { id: '@cf/qwen/qwen3-30b-a3b-fp8', schema: false, timeoutMs: 25000 },
-  { id: '@cf/meta/llama-3.3-70b-instruct-fp8-fast', schema: false, timeoutMs: 30000 },
-  { id: '@cf/meta/llama-3.1-8b-instruct-fp8', schema: false, timeoutMs: 20000 }
+  { id: '@cf/google/gemma-4-26b-a4b-it', format: 'schema', timeoutMs: 35000 },
+  { id: '@cf/qwen/qwen3-30b-a3b-fp8', format: 'object', timeoutMs: 30000 },
+  { id: '@cf/meta/llama-3.3-70b-instruct-fp8-fast', format: 'object', timeoutMs: 35000 }
 ];
 
 const CACHE_TTL_DAYS = 30;
@@ -472,13 +471,15 @@ async function callWorkersAI(env, prompt) {
         temperature: 0.8
       };
 
-      if (model.schema) {
+      if (model.format === 'schema') {
         input.response_format = {
           type: 'json_schema',
           json_schema: { name: 'recipe', schema: RECIPE_SCHEMA }
         };
+      } else if (model.format === 'object') {
+        input.response_format = { type: 'json_object' };
       }
-      if (modelId.includes('gemma-4') || modelId.includes('qwen3')) {
+      if (modelId.includes('gemma-4')) {
         input.chat_template_kwargs = { enable_thinking: false };
       }
 

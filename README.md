@@ -259,16 +259,16 @@ Cache não conta. Quando acaba, a API responde `429` com uma mensagem clara.
    por alta demanda, a cascata cai para o Groq/Workers AI.
 2. **Groq** (`openai/gpt-oss-120b`) - `response_format: json_schema`.
 3. **Workers AI** (`@cf/google/gemma-4-26b-a4b-it`) - binding `AI`, sem
-   chave, com `json_schema` nativo. Se falhar, tenta Qwen3 30B, Llama 3.3
-   70B e Llama 3.1 8B (FP8), nessa ordem.
+   chave, com `json_schema` nativo. Se falhar, tenta Qwen3 30B e Llama 3.3
+   70B, nessa ordem.
 4. **OpenRouter** (lista de modelos `:free`) - `response_format: json_schema`.
    Se um modelo estiver rate-limited (429) ou indisponível (404), tenta o
    próximo da lista: Gemma 4 31B, Gemma 4 26B, Nemotron Lightning e Nemotron
    Ultra.
 
 Cada provedor tem um limite de tempo: **15 s** por chamada no Gemini e no
-OpenRouter, **20 s** no Workers AI e **30 s** no Groq. Se estourar, o Worker
-aborta e cai para o próximo, em vez de segurar a resposta por minutos.
+OpenRouter, **30-35 s** no Workers AI e **30 s** no Groq. Se estourar, o
+Worker aborta e cai para o próximo, em vez de segurar a resposta por minutos.
 
 ---
 
